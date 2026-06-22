@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos de Transferencia | Child's Play</title>
+    <style>
+        /* Estilos generales del cuerpo */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #222222; /* Fondo oscuro para contrastar con la imagen */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            
+        }
+
+        /* Contenedor principal con la imagen de Chucky */
+        .contenedor-chucky {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Tamaño máximo para mantener resolución */
+            aspect-ratio: 1 / 1; /* Mantiene la proporción cuadrada de la imagen original */
+            background-image: url(/image.png); /* Ruta de la imagen */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Área virtual que representa la pantalla de la tablet */
+        .pantalla-tablet {
+            position: absolute;
+            top: 60%; /* Coordenada Y aproximada de la pantalla */
+            left: 20%; /* Coordenada X aproximada de la pantalla */
+            width: 60%; /* Ancho correspondiente a la pantalla en la imagen */
+            height: 30%; /* Alto correspondiente a la pantalla en la imagen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* Adaptación de la tarjeta bancaria para que encaje en el espacio */
+        .tarjeta-bancaria {
+            width: 95%;
+            height: 95%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;            
+        }
+
+        .titulo {
+            color: rgba(0,0,0); /* Oculto visualmente si la imagen ya tiene el título, pero presente en el DOM */
+            font-size: 1.3rem;
+            margin-top: 10px;
+            padding: 0%;
+        }
+
+        .dato-contenedor {
+         
+        }
+
+        .etiqueta {
+            font-size: 1rem;            
+            display: block;
+            margin-left: 80px;
+        }
+
+        .etiqueta_CLABE{
+            font-size: 1rem;            
+            display: block;
+            margin-bottom: 1px;            
+        }
+
+        /* Mantenemos el texto de la CLABE visible y seleccionable */
+        .valor {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            letter-spacing: 1.5px;
+            background-color: rgba(202, 51, 35, 0.8);
+            padding: 1px;
+            padding-right: 6px;
+            width: 50%;
+            margin-left: 110px;
+            border-radius: 4px;
+            display: block;
+        }
+
+        /* Estilo del botón interactivo posicionado sobre el botón de la imagen */
+        .boton-copiar {
+            background-color: rgb(119, 229, 235); /* Transparente para usar el diseño visual de la imagen */
+            border:0ch;            
+            width: 52%;
+            height: 30px; /* Altura que cubre el botón verde de la imagen */
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            margin-left: 110px;
+            border-radius: 6px;
+        }
+        .boton-copiar:hover {
+            background-color: rgb(215, 108, 36);
+        }
+        /* Clase para la animación de éxito */
+        .copiado-exito {
+            background-color: #28a745 !important;
+        }
+        /* Animación visual al presionar 
+        .boton-copiar:active {
+            background-color: rgba(13, 238, 65, 0.887);
+            border-radius: 6px;
+        }*/
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-chucky">
+        <div class="pantalla-tablet">
+            <div class="tarjeta-bancaria">
+                <h2 class="titulo">Datos para Transferencia Bancaria</h2>
+                
+                <div style="text-align: left; margin-bottom: 5px;">
+                    <span class="etiqueta">Beneficiario: Iridian Anahí Nava Peña</span>
+                </div>
+                
+                <div style="text-align: left; margin-bottom: 5px;">
+                    <span class="etiqueta">Institución: BBVA</span>
+                </div>
+
+                <div class="dato-contenedor">
+                    <span class="etiqueta_CLABE">Cuenta CLABE</span>
+                    <span class="valor" id="clabeBancaria">012180015874228542</span>
+                </div>
+
+                <button class="boton-copiar" id="btnCopiar" onclick="copiarAlPortapapeles()" aria-label="Copiar CLABE">Copiar CLABE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Función que extrae el texto del DOM y lo inyecta en el portapapeles.
+         */
+        function copiarAlPortapapeles() {
+            const textoClabe = document.getElementById('clabeBancaria').innerText;
+            const boton = document.getElementById('btnCopiar');
+            
+            navigator.clipboard.writeText(textoClabe).then(() => {
+                alert("¡CLABE copiada exitosamente!");
+                
+                const textoOriginal = boton.innerText;
+                boton.innerText = "¡Copiado!";
+                boton.classList.add("copiado-exito");
+
+                // Restaurar el botón después de 2.5 segundos
+                setTimeout(() => {
+                    boton.innerText = textoOriginal;
+                    boton.classList.remove("copiado-exito");
+                }, 2000)
+
+            }).catch(err => {
+                console.error("Error al copiar al portapapeles: ", err);
+                alert("No se pudo copiar el texto. Por favor, selecciónelo manualmente.");
+            });
+        }   
+    </script>
+</body>
+</html>
